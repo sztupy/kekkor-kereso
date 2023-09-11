@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Kékkör kereső</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    
+    <script type="module" crossorigin src="/kekkor-kereso/assets/index.9d3220de.js"></script>
+    <link rel="stylesheet" href="/kekkor-kereso/assets/index.b70cdf0d.css">
+  </head>
+  <body>
+    <script src="https://sztupy.hu/assets/js/logo.js"></script>
+    <div id="main" class="main">
+        <div id="map" class="map"></div>
+        <div id="results" class="results">
+            <div id="resulttext">
+
+            </div>
+        </div>
+    </div>
+
+    <div id="help" class="ol-help">
+        <div id="help-content">
+            <h1>Kékkör szakasz kereső</h1>
+            <h3>Mi a szösz ez?</h3>
+            <p>
+                Az alkalmazás segít olyan kéktúra / kékkör szakaszt találni, ahol a szakasz két vége között létezik könnyen elérhető tömegközlekedés.
+            </p>
+            <h3>Ez miért is jó?</h3>
+            <p>
+                Ez lehetővé teszi, hogy egy rövidebb vagy hoszabb szakaszt az alábbi módon be lehessen járni egy nap alatt:
+                <ol>
+                    <li>Autóval indulunk, és leparkolunk a kiinduló buszmegálló környékén</li>
+                    <li>Felszállunk a buszra (vagy egyéb tömegközlekedési eszközre), és elmegyünk vele a bejárni kívánt kékkör szakasz elejéhez közel eső buszmegállóig</li>
+                    <li>Ott leszállunk, és elsétálunk a buszmegállótól a kiindulóponthoz tartozó bélyegzőhelyig</li>
+                    <li>A bélyegzőhelyen rákanyarodunk a kékkörre, és követjük a jelzéseket a kiszemelt szakasz végéig, ahol szintén lesz majd bélyegzőhely.</li>
+                    <li>A célállomáson lévő bélyegzőhelytől szépen visszasétálunk a kiinduló buszmegállóig, ahol az autónkat hagytuk.</li>
+                </ol>
+            </p>
+            <h3>Hogyan működik?</h3>
+            <p>
+                A térkép a betöltés után pár, véletlenszerűen kiválasztott lehetőséget mutat. Rájuk kattintva meg lehet tekinteni a lehetőség pontos leírását, például hogy melyik buszmegállóból indul, mekkora lesz a megtett út, és hogy hogyan kell megközelíteni az állomásokat. A bejárt útvonalat GPX formátumban is le lehet tölteni.
+            </p>
+            <p>
+                A térkép az alábbi színkódokkal dolgozik:
+                <ul>
+                    <li><b>Kék</b>: kéktúra / kékkör szakasz</li>
+                    <li><b>Narancs</b>: tömegközlekedés</li>
+                    <li><b>Zöld</b>: kékkörön kívüli séta szakasz, ami vagy a buszmegálló és a legközelebbi bélyegzőhely közötti útvonalat mutatja, vagy két busz közötti átszállást jelzi</li>
+                </ul>
+            </p>
+            <p>
+                A kereső gombra (🔎) kattintva lehetőségünk van a találatok finomhangolására, például meg lehet adni, hogy mekkora a legnagyobb távolság amit szeretnél sétálni, vagy legfeljebb mennyi időt szánsz tömegközlekedésre.
+            </p>
+            <h3>Valami fura!</h3>
+            <p>
+                Ha bármi furát találsz akkor kérlek jelezd a <a href="https://github.com/sztupy/kekkor-kereso/issues">hibabejelentőn</a>, vagy ha értesz hozzá segíts <a href="https://github.com/sztupy/kekkor-kereso">kijavítani a kódban</a>. Néhány ismert probléma:
+                <ul>
+                    <li><b>A bélyegzőhely és a kéktúra szakasz között nincs összeköttetés!</b><br>A rendszerben a kéktúra szakaszok a hivatalos kéktúra útvonalat tartalmazzák, az útvonalkeresés azonban a bélyegzőhelyek között történik a rendszerben. A bélyegzőhelyek általában a túra útvonalán, vagy ahhoz nagyon közel vannak. Azonban egyes településeken megesik, hogy az útvonaltól jóval messzebb, akár párszáz méterre is kerülhettek ezek a pontok, például egy iskola vagy vasútállomás mellé. Ez az extra szakasz jelenenleg nincs a rendszerben lefedve.</li>
+                    <li><b>Odamentem ahova mondtad, de sehol nem lehet a környéken parkolni!</b><br>Sajnos nincs adatbázisom arról, hogy melyik buszmegállók közelében lehet érdemben parkolni. Számos hegyi szakasz környékén található buszmegálló olyan útvonalon van, ahol a közelben nincs biztonságos lehetőség a gépjármú hosszabb távú leparkolárása. Javaslom az indulás előtt, hogy Google Street View-n lesd körbe a környéket, hogy található-e ott parkolásra alkalmas terület, vagy sem.</li>
+                    <li><b>Próbálom követni a sétaútvonalat, de a valóságban itt nincs se út, se csapás, se semmi!</b><br>A gyalogutak tervezésénél az OpenStreetMap adatbázisa lett felhasználva. Turistaútvonalak esetén megeshet, hogy az adatbázis elavult és olyan utat jelez ami a valóságban már nem létezik, benőtte a gaz, vagy elvesztette közút jellegét és már egy építési terület közepén vezet keresztül. Ezeket a hibákat érdemes az eredeti adatbázisban orvosolni, az <a href="https://turistautak.openstreetmap.hu/">OpenStreetMap bárki által szerkeszthető</a>, és szívesen várják az ilyen jellegű javításokat. A keresés szintén tervezhet útvonalat kizárólag időszakosan, belépődíj ellenében elérhető utakra is, ilyen például a Visegrád-Nagymaros közműalagút.</li>
+                    <li><b>Odamentem a buszmegállóhoz ahogy írtad, de a busz nem jár!</b><br>A buszútvonalak tervezésénél a 2023. szeptember 9-i buszmenetrendet vettem alapul, ami egy nyári időszámítás alatti, iskolaidőben érvényes, szombati menetrend. A menetrend időközben megváltozhatott így javaslom indulás előtt nézd meg a <a href="https://menetrendek.hu">menetrendek.hu</a>-n, hogy a megadott megállóból tényleg indulni fog-e a kiszemelt busz.</li>
+                </ul>
+            </p>
+            <h3>Elolvastam mindent, szeretnék nézelődni!</h3>
+            <div id="loading">Az oldal betöltése folyamatban...</div>
+            <a href="#" id="help-closer">Súgó bezárása</a>
+        </div>
+    </div>
+
+    <div id="search" class="ol-search">
+        <div id="search-content">
+            <form id="search-form">
+                <label for="max-walk">Legnagyobb táv, amit meg szeretnénk tenni:</label>
+                <select name="max-walk">
+                    <option value="10">10km</option>
+                    <option value="15">15km</option>
+                    <option value="20">20km</option>
+                    <option value="25">25km</option>
+                    <option value="30">30km</option>
+                    <option value="35">35km</option>
+                    <option value="40">40km</option>
+                    <option value="50">50km</option>
+                    <option value="100" selected>Mindegy</option>
+                </select>
+
+                <label for="min-blue">Legalább ennyit szeretnék kéktúra szakaszon sétálni:</label>
+                <select name="min-blue">
+                    <option value="5">5km</option>
+                    <option value="10">10km</option>
+                    <option value="15">15km</option>
+                    <option value="20">20km</option>
+                    <option value="25">25km</option>
+                    <option value="30">30km</option>
+                    <option value="35">35km</option>
+                    <option value="0" selected>Mindegy</option>
+                </select>
+
+                <label for="max-bus">Legfeljebb ennyi időt töltenék tömegközlekedési eszközön:</label>
+                <select name="max-bus">
+                    <option value="30">Fél óra</option>
+                    <option value="60">Egy óra</option>
+                    <option value="90">Másfél óra</option>
+                    <option value="120">Két óra</option>
+                    <option value="150">Két és fél óra</option>
+                    <option value="180">Három óra</option>
+                    <option value="1000" selected>Mindegy</option>
+                </select>
+
+                <label for="search-type">Keresési módszer</label>
+                <select name="search-type">
+                    <option value="shortest">A kékkörön kívüli sétatáv legyen minél kevesebb</option>
+                    <option value="quickest">Minél kevesebbet kelljen tömegközlekedni</option>
+                    <option value="optimal" selected>Valahol félúton az előző kettő opció között</option>
+                    <option value="all">Minden lehetőség jöhet</option>
+                </select>
+
+                <label for="amount">Eredmények száma</label>
+                <select name="amount">
+                    <option value="1">1</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20" selected>20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="10000">Összes</option>
+                </select>
+
+                <button name="initiate-search">Keresés indítása</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="popup" class="ol-popup">
+        <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+        <div id="popup-content"></div>
+    </div>
+
+    
+  </body>
+</html>
