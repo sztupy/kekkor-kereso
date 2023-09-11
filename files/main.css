@@ -206,7 +206,7 @@ h3 {
   }
   #resulttext {
     min-height: 40vh;
-    width: 100%;
+    min-width: 80%;
   }
   #search {
     right: 1em;
