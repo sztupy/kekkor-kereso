@@ -1,3 +1,4 @@
+import Data from './result.json';
 import Feature from 'ol/Feature.js';
 import Polyline from 'ol/format/Polyline';
 import Map from 'ol/Map.js';
@@ -5,7 +6,6 @@ import View from 'ol/View.js';
 import {Stroke, Style} from 'ol/style.js';
 import {OSM, Vector as VectorSource} from 'ol/source.js';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
-import Data from './result.json';
 import {useGeographic, toLonLat} from 'ol/proj.js';
 import Select from 'ol/interaction/Select'
 import {pointerMove} from 'ol/events/condition.js';
