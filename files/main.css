@@ -52,10 +52,12 @@ html,body {
   overflow: auto;
 }
 .ol-attribution {
-  right: 50px;
+  left: 5px;
+  right: auto;
 }
 .ol-attribution.ol-uncollapsible {
-  right: 50px;
+  left: 5px;
+  right: auto;
 }
 .ol-popup {
   position: absolute;
@@ -100,10 +102,11 @@ html,body {
   content: "✖";
 }
 .main {
+  overflow: hidden;
   display: flex;
   flex-direction: row;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
 }
 .map {
   flex-grow: 3;
@@ -195,6 +198,15 @@ h3 {
   #results {
     width: 100%;
     height: 0;
+  }
+  #results.contents {
+    flex-grow: 1;
+    width: 100%;
+    overflow: auto;
+  }
+  #resulttext {
+    min-height: 40vh;
+    width: 100%;
   }
   #search {
     right: 1em;
