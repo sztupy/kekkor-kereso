@@ -32,11 +32,11 @@ const form = document.getElementById('search-form')
 const layers = [];
 const mipMapLayers = [
   { maxZoom: 9, sources: [] },
-  { maxZoom: 7, simplify: 0.05, sources: [] },
-  { maxZoom: 5, simplify: 0.1, sources: [] },
-  { maxZoom: Number.NEGATIVE_INFINITY, simplify: 0.5, sources: [] }
+  { maxZoom: 7, simplify: 0.01, sources: [] },
+  { maxZoom: 4, simplify: 0.05, sources: [] },
+  { maxZoom: Number.NEGATIVE_INFINITY, simplify: 0.1, sources: [] }
 ];
-let currentZoom = 3;
+let currentZoom = 1;
 
 // no mipmap
 // const mipMapLayers = [
