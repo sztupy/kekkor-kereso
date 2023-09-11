@@ -29,10 +29,25 @@ const closer = document.getElementById('popup-closer');
 
 const form = document.getElementById('search-form')
 
-let layers = [];
+const layers = [];
+const mipMapLayers = [
+  { maxZoom: 9, sources: [] },
+  { maxZoom: 7, simplify: 0.05, sources: [] },
+  { maxZoom: 5, simplify: 0.1, sources: [] },
+  { maxZoom: Number.NEGATIVE_INFINITY, simplify: 0.5, sources: [] }
+];
+let currentZoom = 3;
+
+// no mipmap
+// const mipMapLayers = [
+//   { maxZoom: Number.NEGATIVE_INFINITY, sources: [] }
+// ];
+// let currentZoom = 0;
+
+let visibleLayerCount = 0;
+
 let mouseCoord = null;
 let selectedFeature = null;
-let hoverFeature = null;
 
 useGeographic();
 
@@ -183,8 +198,10 @@ function runFilter() {
     [validLayers[i], validLayers[j]] = [validLayers[j], validLayers[i]];
   }
 
+  visibleLayerCount = 0;
   for (let i=0; i< Math.min(amount, validLayers.length); i++) {
     validLayers[i].setVisible(true);
+    visibleLayerCount += 1;
   }
 }
 
@@ -210,7 +227,7 @@ const styleFunction = function (feature) {
     const layer = layers[feature.get('layerId')];
     const selectedLayer = layers[selectedFeature.get('layerId')];
 
-    if (feature == selectedFeature) {
+    if (feature.get('id') == selectedFeature.get('id')) {
       return selectStyle;
     }
 
@@ -319,10 +336,8 @@ selectPointerMove.on("select", event => {
   if (event.selected[0]) {
     content.innerHTML = dataToString(event.selected[0], layers[event.selected[0].get('layerId')]);
     overlay.setPosition(mouseCoord);
-    hoverFeature = event.selected[0];
   } else {
     overlay.setPosition(undefined);
-    hoverFeature = null;
   }
 });
 
@@ -393,6 +408,22 @@ map.on('pointermove', function(evt){
   mouseCoord = evt.coordinate;
 });
 
+map.getView().on('change:resolution', () => {
+  const zoom = map.getView().getZoom();
+  for (let mipMapId in mipMapLayers) {
+    const mipMapData = mipMapLayers[mipMapId];
+    if (zoom > mipMapData.maxZoom) {
+      if (currentZoom != mipMapId) {
+        currentZoom = mipMapId;
+        for (let layerId in layers) {
+          layers[layerId].setSource(mipMapData.sources[layerId]);
+        }
+      }
+      break;
+    }
+  }
+});
+
 form.elements.namedItem("initiate-search").onclick = function() {
   runFilter();
   return false;
@@ -415,19 +446,39 @@ for (let optionId in Data) {
   });
 
   let blue_route = new Polyline({factor: 1e5}).readGeometry(option.blue_route);
-  vectorSource.addFeature(new Feature({length: option.blue_length, layerId: optionId, type: 'blue_route',geometry: blue_route}));
+  vectorSource.addFeature(new Feature({ id: `B${optionId}`, length: option.blue_length, layerId: optionId, type: 'blue_route',geometry: blue_route}));
 
   let start_route = new Polyline({factor: 1e5}).readGeometry(option.walk_start_route);
-  vectorSource.addFeature(new Feature({length: option.walk_start_length, layerId: optionId, type: 'walk_route_start',geometry: start_route}));
+  vectorSource.addFeature(new Feature({ id: `S${optionId}`, length: option.walk_start_length, layerId: optionId, type: 'walk_route_start',geometry: start_route}));
 
   let end_route = new Polyline({factor: 1e5}).readGeometry(option.walk_end_route);
-  vectorSource.addFeature(new Feature({length: option.walk_end_length, layerId: optionId, type: 'walk_route_end',geometry: end_route}));
+  vectorSource.addFeature(new Feature({id: `E${optionId}`, length: option.walk_end_length, layerId: optionId, type: 'walk_route_end',geometry: end_route}));
 
-  for (let transit of option.transit_legs) {
+  for (let transitId in option.transit_legs) {
+    let transit = option.transit_legs[transitId];
     let transit_route = new Polyline({factor: 1e5}).readGeometry(transit.route.legGeometry.points);
-    vectorSource.addFeature(new Feature({data: transit, length: transit.length, layerId: optionId, type: transit.route.mode == 'WALK' ? 'transit_walk' : 'transit',geometry: transit_route}));
+    vectorSource.addFeature(new Feature({id: `T${optionId}_${transitId}`, data: transit, length: transit.length, layerId: optionId, type: transit.route.mode == 'WALK' ? 'transit_walk' : 'transit',geometry: transit_route}));
   }
 
+  for (const mipMapData of mipMapLayers) {
+    if (!mipMapData.simplify) {
+      mipMapData.sources[optionId] = vectorSource;
+    } else {
+      const source = new VectorSource();
+      source.addFeature(new Feature({ id: `B${optionId}`, length: option.blue_length, layerId: optionId, type: 'blue_route',geometry: blue_route.simplify(mipMapData.simplify)}));
+      source.addFeature(new Feature({ id: `S${optionId}`, length: option.walk_start_length, layerId: optionId, type: 'walk_route_start',geometry: start_route.simplify(mipMapData.simplify)}));
+      source.addFeature(new Feature({id: `E${optionId}`, length: option.walk_end_length, layerId: optionId, type: 'walk_route_end',geometry: end_route.simplify(mipMapData.simplify)}));
+
+      for (let transitId in option.transit_legs) {
+        let transit = option.transit_legs[transitId];
+        let transit_route = new Polyline({factor: 1e5}).readGeometry(transit.route.legGeometry.points);
+        source.addFeature(new Feature({id: `T${optionId}_${transitId}`, data: transit, length: transit.length, layerId: optionId, type: transit.route.mode == 'WALK' ? 'transit_walk' : 'transit',geometry: transit_route.simplify(mipMapData.simplify)}));
+      }
+      mipMapData.sources[optionId] = source;
+    }
+  }
+
+  vectorLayer.setSource(mipMapLayers[currentZoom].sources[optionId]);
   vectorLayer.setVisible(false);
   vectorLayer.setOpacity(0.5);
   vectorLayer.setZIndex(1);
