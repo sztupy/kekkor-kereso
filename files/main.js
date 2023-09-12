@@ -104,7 +104,7 @@ function dataToString(selectedFeature, data, advanced) {
   let blueWalk = Math.round(layerData.blue_length)/1000;
 
   if (!advanced) {
-    return `<b>${layerData.end_stamp.name} - ${layerData.start_stamp.name}</b><br>🚶 ${totalWalk}km / 🟦 ${blueWalk}km / 🚌 ${totalTransit} perc${countChange>0 ? ` 🔄 ${countChange}` : ''}<br>⏰ ${layerData.transit_legs[0].start_times.join(" / ")}<br><br>`;
+    return `<b>${layerData.end_stamp.name} - ${layerData.start_stamp.name}</b> ${layerData.type.includes('quickest')?'<span title="legkevesebb tömegközlekedés">⏰</span>':''}${layerData.type.includes('shortest')?'<span title="legkevesebb séta">🏃</span>':''}${layerData.type.includes('optimal')?'<span title="átlagos útvonal">⭐</span>':''}<br><span title="Összes gyaloglás">🚶 ${totalWalk}km</span> / <span title="Kékkörön gyaloglás">🟦 ${blueWalk}km</span> / <span title="tömegközlekedés ideje">🚌 ${totalTransit} perc</span>${countChange>0 ? ` <span title="Átszállások száma">🔄 ${countChange}</span>` : ''}<br><span title="Menetrend szerinti indulások">⏰ ${layerData.transit_legs[0].start_times.join(" / ")}</span><br><br>`;
   }
 
   let advancedLayerString = `<h1>${layerData.end_stamp.name} - ${layerData.start_stamp.name}</h1><br><b>Kiindulópont</b>: ${layerData.start_transit} @ ${layerData.transit_legs[0].start_times.join(" / ")}<br><b>Tömegközlekedés:</b> ${totalTransit} perc ${countChange > 0 ? `(+ ${countChange} átszállás)`: ''}<br><b>Gyaloglás</b>: ${totalWalk}km<br><b>Ebből kékkör</b>: ${blueWalk}km`;
