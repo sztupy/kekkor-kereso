@@ -254,7 +254,7 @@ function calculateTotalBus(layerData) {
 
 function orderList(type) {
   if (type == 0) {
-    visibleLayers.sort((a,b) => a.get('data').end_stamp.name.localeCompare(b.get('data').end_stamp.name));
+    visibleLayers.sort((a,b) => `${a.get('data').end_stamp.name}-${a.get('data').start_stamp.name}`.localeCompare(`${b.get('data').end_stamp.name}-${b.get('data').start_stamp.name}`));
   }
   if (type == 1) {
     visibleLayers.sort((a,b) => calculateTotalWalk(a.get('data')) - calculateTotalWalk(b.get('data')));
