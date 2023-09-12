@@ -13,9 +13,9 @@
         content="Körbejárható kéktúra szakasz kereső alkalmazás">
     <meta property="og:image" content="https://sztupy.hu/kekkor-kereso/social-preview.png">
     <meta property="og:url" content="https://sztupy.hu/kekkor-kereso/">
-    <script type="module" crossorigin src="/kekkor-kereso/assets/main.a2bce195.js"></script>
+    <script type="module" crossorigin src="/kekkor-kereso/assets/main.c45ebed6.js"></script>
     <link rel="modulepreload" crossorigin href="/kekkor-kereso/assets/result.8fc46c49.js">
-    <link rel="stylesheet" href="/kekkor-kereso/assets/index.d3ff0ce6.css">
+    <link rel="stylesheet" href="/kekkor-kereso/assets/index.fe75412d.css">
   </head>
   <body>
     <script src="https://sztupy.hu/assets/js/logo.js"></script>
@@ -25,6 +25,18 @@
             <div id="resulttext">
 
             </div>
+        </div>
+    </div>
+
+    <div id="result-list" class="result-list">
+        <div id="result-order">
+            <a href="#" id="result-order-0">🔤</a>
+            <a href="#" id="result-order-1">🚶</a>
+            <a href="#" id="result-order-2">🟦</a>
+            <a href="#" id="result-order-3">🚌</a>
+            <a href="#" id="result-order-4">⏰</a>
+        </div>
+        <div id="result-list-content">
         </div>
     </div>
 
@@ -71,6 +83,14 @@
                     <li><b>Odamentem a buszmegállóhoz ahogy írtad, de a busz nem jár!</b><br>A buszútvonalak tervezésénél a 2023. szeptember 9-i buszmenetrendet vettem alapul, ami egy nyári időszámítás alatti, iskolaidőben érvényes, szombati menetrend. A menetrend időközben megváltozhatott így javaslom indulás előtt nézd meg a <a href="https://menetrendek.hu">menetrendek.hu</a>-n, hogy a megadott megállóból tényleg indulni fog-e a kiszemelt busz.</li>
                 </ul>
             </p>
+            <h3>Beállítások</h3>
+            <p>
+                Ha problémád van az oldal teljesítményével, akkor javaslom töltsd újra az oldalt az átlátszó útvonalak kikapcsolásával:
+            </p>
+            <ul>
+                <li><a href="?opaque">Átlátszó útvonalak kikapcsolása</a></li>
+                <li><a href="?transparent">Átlátszó útvonalak bekapcsolása</a></li>
+            </ul>
             <h3>Elolvastam mindent, szeretnék nézelődni!</h3>
             <div id="loading">Az oldal betöltése folyamatban...</div>
             <a href="#" id="help-closer">Súgó bezárása</a>
@@ -124,18 +144,25 @@
                     <option value="all">Minden lehetőség jöhet</option>
                 </select>
 
+                <label for="search-extent">Keresés helye</label>
+                <select name="search-extent">
+                    <option value="all" selected>Egész Magyarország</option>
+                    <option value="map-extent">Aktuális térképen található</option>
+                    <option value="map-touch">Aktuális térképet érintő</option>
+                </select>
+
                 <label for="amount">Eredmények száma</label>
                 <select name="amount">
                     <option value="1">1</option>
                     <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="20" selected>20</option>
+                    <option value="10" selected>10</option>
+                    <option value="20">20</option>
                     <option value="50">50</option>
                     <option value="100">100</option>
-                    <option value="10000">Összes</option>
+                    <option value="100000">Összes</option>
                 </select>
 
-                <button name="initiate-search">Keresés indítása</button>
+                <button name="initiate-search">Újratervezés</button>
             </form>
         </div>
     </div>

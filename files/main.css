@@ -138,13 +138,39 @@ html,body {
   top: 80px;
 }
 
-
 .show-help {
-  top: 95px;
+  top: 130px;
   left: .5em;
 }
 .ol-touch .show-help {
-  top: 110px;
+  top: 200px;
+}
+
+.show-list {
+  top: 90px;
+  left: .5em;
+}
+.ol-touch .show-list {
+  top: 120px;
+}
+
+a.result-link {
+  display: inline-block;
+  width: 100%;
+  text-decoration: none;
+  color: black;
+}
+
+a.result-link:hover {
+  background-color: lightblue;
+}
+
+a.selected-link {
+  background-color: lightskyblue;
+}
+
+a.selected-link:hover {
+  background-color: lightsteelblue;
 }
 
 h1 {
@@ -184,6 +210,36 @@ h3 {
   background-color: lightskyblue;
 }
 
+#result-order a {
+  display: inline-block;
+  text-decoration: none;
+  background-color: lightblue;
+  padding: 0.5em;
+  border: 1px solid black;
+  margin: 0.5em;
+}
+
+#result-order a:hover {
+  background-color: lightskyblue;
+}
+
+#result-list {
+  display: none;
+  position: absolute;
+  top:0;
+  bottom:0;
+  right:0;
+  overflow: auto;
+  background-color: white;
+}
+
+#result-list-content {
+  padding: 1em;
+  margin: 1em;
+  border: 1px solid black;
+  width: 30vw;
+}
+
 @media all and (orientation: portrait) {
   .main {
     display: flex;
@@ -210,5 +266,18 @@ h3 {
   }
   #search {
     right: 1em;
+  }
+  #result-list {
+    top: auto;
+    max-height: 50vh;
+    left: 0;
+  }
+  #result-list-content {
+    padding: 1em;
+    margin: 1em;
+    border: 1px solid black;
+    min-width: 80%;
+    height: auto;
+    min-height: 30vh;
   }
 }
