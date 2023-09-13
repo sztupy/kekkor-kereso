@@ -3,17 +3,19 @@ import Feature from 'ol/Feature.js';
 import Polyline from 'ol/format/Polyline';
 import Map from 'ol/Map.js';
 import View from 'ol/View.js';
-import {Stroke, Style} from 'ol/style.js';
-import {OSM, Vector as VectorSource} from 'ol/source.js';
-import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
-import {useGeographic} from 'ol/proj.js';
+import { Stroke, Style}  from 'ol/style.js';
+import { OSM, Vector as VectorSource}  from 'ol/source.js';
+import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer.js';
+import { useGeographic } from 'ol/proj.js';
 import Select from 'ol/interaction/Select'
-import {click, pointerMove} from 'ol/events/condition.js';
+import { pointerMove } from 'ol/events/condition.js';
 import Overlay from 'ol/Overlay';
-import {Control, defaults as defaultControls} from 'ol/control.js';
+import { Control, defaults as defaultControls } from 'ol/control.js';
 import { MultiLineString } from 'ol/geom';
 import GPX from 'ol/format/GPX.js';
 import { containsExtent } from 'ol/extent';
+import BlueTrail from './kekkor.json';
+import GeoJSON from 'ol/format/GeoJSON.js';
 
 const resultsDom = document.getElementById("results");
 const resultsTextDom = document.getElementById("resulttext");
@@ -47,6 +49,7 @@ let hoverOpacity;
 let selectedOpacity;
 let defaultFeatureOpacity;
 let selectedFeatureOpacity;
+let blueTrailOpacity;
 
 let visibleLayerCount = 0;
 let visibleLayers = [];
@@ -64,12 +67,14 @@ function setOpacity(enabled) {
     selectedOpacity = 1;
     defaultFeatureOpacity = 0.5;
     selectedFeatureOpacity = 0.75;
+    blueTrailOpacity = 0.25;
   } else {
     defaultOpacity = 1;
     hoverOpacity = 1;
     selectedOpacity = 1;
     defaultFeatureOpacity = 1;
     selectedFeatureOpacity = 1;
+    blueTrailOpacity = 1;
   }
 }
 
@@ -353,6 +358,23 @@ const selectStyle = [
   })
 ];
 
+const blueTrailStyleFunction = function (feature) {
+  return [new Style({
+    stroke: new Stroke({
+      color: [255,255,255,blueTrailOpacity],
+      width: 6
+    }),
+    zIndex: 1
+  }),
+  new Style({
+    stroke: new Stroke({
+      color: [0,0,255,blueTrailOpacity],
+      width: 2
+    }),
+    zIndex: 2
+  })]
+}
+
 const styleFunction = function (feature) {
   if (selectedFeature && feature.get('id') == selectedFeature.get('id')) {
     return selectStyle;
@@ -389,7 +411,8 @@ const styleFunction = function (feature) {
              feature.get('type') == 'transit' ? [255,165,0,defaultFeatureOpacity] :
              [1,50,32,defaultFeatureOpacity],
       width: 6,
-    })
+    }),
+    zIndex: 100
   });
 };
 
@@ -479,7 +502,8 @@ class ShowResultsControl extends Control {
 
 const selectPointerMove = new Select({
   condition: pointerMove,
-  style: selectStyle
+  style: selectStyle,
+  layers: layers
 });
 
 selectPointerMove.on("select", event => {
@@ -517,12 +541,22 @@ for (let orderType = 0; orderType <= 4; orderType++) {
   document.getElementById(`result-order-${orderType}`).onclick = () => orderList(orderType);
 }
 
+const blueTrailVectorSource = new VectorSource({
+  features: new GeoJSON().readFeatures(BlueTrail),
+});
+
+const blueTrailVectorLayer = new VectorLayer({
+  source: blueTrailVectorSource,
+  style: blueTrailStyleFunction
+});
+
 const map = new Map({
   controls: defaultControls().extend([new ShowSearchControl(), new ShowHelpControl(), new ShowResultsControl()]),
   layers: [
     new TileLayer({
       source: new OSM(),
-    })
+    }),
+    blueTrailVectorLayer
   ],
   target: 'map',
   view: new View({
