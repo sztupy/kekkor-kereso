@@ -4,6 +4,8 @@ Web application helping walkers find round-trip sections on the national blue ro
 
 Website available on https://sztupy.hu/kekkor-kereso
 
+Technical write-up: https://tumblr.esoxy.uk/post/728362854742458368/github-sztupykekkor-kereso
+
 # Data sources
 
 Main data sources used:
