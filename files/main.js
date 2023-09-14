@@ -5,6 +5,7 @@ import Map from 'ol/Map.js';
 import View from 'ol/View.js';
 import { Stroke, Style}  from 'ol/style.js';
 import { OSM, Vector as VectorSource}  from 'ol/source.js';
+import { ATTRIBUTION } from 'ol/source/OSM.js';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer.js';
 import { useGeographic } from 'ol/proj.js';
 import Select from 'ol/interaction/Select'
@@ -550,12 +551,26 @@ const blueTrailVectorLayer = new VectorLayer({
   style: blueTrailStyleFunction
 });
 
+const TrailLayer = new TileLayer({
+  source: new OSM({
+    attributions: [
+      'Trail overlay: <a href="https://www.waymarkedtrails.org/">Waymarked Trails</a>',
+      ATTRIBUTION,
+    ],
+    opaque: false,
+    url: 'https://tile.waymarkedtrails.org/hiking/{z}/{x}/{y}.png'
+  }),
+  opacity: defaultOpacity,
+  visible: false
+});
+
 const map = new Map({
   controls: defaultControls().extend([new ShowSearchControl(), new ShowHelpControl(), new ShowResultsControl()]),
   layers: [
     new TileLayer({
       source: new OSM(),
     }),
+    TrailLayer,
     blueTrailVectorLayer
   ],
   target: 'map',
@@ -625,6 +640,11 @@ map.getView().on('change:resolution', () => {
       }
       break;
     }
+  }
+  if (zoom > 11) {
+    TrailLayer.setVisible(true);
+  } else {
+    TrailLayer.setVisible(false);
   }
 });
 
